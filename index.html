@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enerji Hukuku İnteraktif Deneme Sınavları (6 Set)</title>
+    <style>
+        :root {
+            --primary-color: #0b2240;
+            --secondary-color: #1d3557;
+            --success-color: #2a9d8f;
+            --error-color: #e63946;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #2b2d42;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background-color: #e2e8f0;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(11, 34, 64, 0.2);
+        }
+
+        .exam-panel {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .exam-panel.active {
+            display: block;
+        }
+
+        .exam-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .question-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #0f172a;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .option-label:hover {
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        /* Sonuç Renklendirmeleri */
+        .option-label.correct-answer {
+            background-color: #d1fae5 !important;
+            border-color: var(--success-color) !important;
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        .option-label.wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: var(--error-color) !important;
+            color: #991b1b;
+        }
+
+        .rationale-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+            color: #1e40af;
+            font-style: italic;
+        }
+
+        .action-area {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .submit-btn {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #21867a;
+            transform: translateY(-2px);
+        }
+
+        .result-dashboard {
+            display: none;
+            background: #f0fdf4;
+            border: 2px solid #bbf7d0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .result-dashboard h3 {
+            margin: 0 0 10px 0;
+            color: #166534;
+            font-size: 20px;
+        }
+
+        .score-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #15803d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Enerji Hukuku İnteraktif Sınav Modülü</h1>
+        <p>Her Sınavda 20 Konunun Sıralı Dağılımına Birebir Uygun Toplam 6 Çözülebilir Deneme Seti</p>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchExam(1)">Deneme Sınavı 1</button>
+        <button class="tab-btn" onclick="switchExam(2)">Deneme Sınavı 2</button>
+        <button class="tab-btn" onclick="switchExam(3)">Deneme Sınavı 3</button>
+        <button class="tab-btn" onclick="switchExam(4)">Deneme Sınavı 4</button>
+        <button class="tab-btn" onclick="switchExam(5)">Deneme Sınavı 5</button>
+        <button class="tab-btn" onclick="switchExam(6)">Deneme Sınavı 6</button>
+    </div>
+
+    <div id="exam-container"></div>
+</div>
+
+<script>
+    // 6 Farklı Sınavın Tam Soru Veri Tabanı (Senin 20 konuna milimetrik sıralı)
+    const examsData = {
+        1: {
+            title: "Deneme Sınavı 1: Genel Müfredat Tarama Seti",
+            questions: [
+                { q: "1. Fosil kaynakların alternatiflerine göre ucuz ve ticaretinin kolay olması sebebiyle devletlerin enerji üretiminde ilk tercihlerini oluşturması hangi gruptadır?", o: ["A) Yenilenebilir Enerji Kaynakları", "B) Yenilenemez Enerji Kaynakları", "C) Sınırsız Enerji Kaynakları", "D) Alternatif Akım Kaynakları"], a: 1, r: "Kömür, petrol, doğal gaz gibi fosil kaynaklar yasa ve sunumda yenilenemez enerji kaynağıdır." },
+                { q: "2. Anayasa Madde 104 uyarınca Cumhurbaşkanının kanunların uygulanmasını sağlamak üzere çıkarabileceği hukuki kaynak hangisidir?", o: ["A) Kanun", "B) Yönetmelik", "C) Anayasa Değişikliği", "D) Doktrin görüşü"], a: 1, r: "Anayasa Madde 104'e göre Cumhurbaşkanı kanunların uygulanmasını sağlamak üzere yönetmelik çıkarabilir." },
+                { q: "3. Enerji hukukunun diğer hukuk dalları ile ilişkili olup farklı hukuk disiplinlerinin bilgi ve katkısından yararlanması ona hangi yapıyı kazandırır?", o: ["A) Monist Yapı", "B) Statik Yapı", "C) İnterdisipliner (Disiplinlerarası) Yapı", "D) Dogmatik Yapı"], a: 2, r: "Farklı hukuk alanlarıyla olan yoğun etkileşimi nedeniyle enerji hukuku interdisiplinerdir." },
+                { q: "4. Aşağıdakilerden hangisi EPDK'nın genel görevleri arasında yer alan ikincil mevzuat düzenleme yetkisine girer?", o: ["A) Kanun koymak veya kaldırmak", "B) Yönetmelik, Tebliğ ve Kurul Kararı düzenlemek", "C) Anayasa Mahkemesine iptal davası açmak", "D) Şirketleri re'sen kamulaştırmak"], a: 1, r: "Yönetmelik, tebliğ ve kurul kararı gibi ikincil mevzuatları düzenlemek EPDK'nın asli görevidir." },
+                { q: "5. 6446 sayılı Elektrik Piyasası Kanunu'na göre elektrik piyasasında lisans almak koşuluyla yürütülebilecek faaliyetlerden biri değildir?", o: ["A) İletim faaliyeti", "B) Dağıtım faaliyeti", "C) Mikrokojenerasyon tesisleri işletimi", "D) Piyasa işletim faaliyeti"], a: 2, r: "Mikrokojenerasyon tesisleri yasal olarak lisans alma yükümlülüğünden muaf tutulmuştur." },
+                { q: "6. Lisanssız elektrik üretim faaliyeti kapsamında yenilenebilir enerji kaynaklarına dayalı üretim tesisleri için getirilen azami kurulu güç sınırı nedir?", o: ["A) Azami 1 megavat", "B) Azami 5 megavat", "C) Azami 10 megavat", "D) Herhangi bir sınır yoktur"], a: 0, r: "Mevzuata göre kurulu gücü azami 1 MW olan yenilenebilir tesisler lisanssız faaliyet gösterebilir." },
+                { q: "7. Elektrik piyasasında iletim faaliyeti lisansı kapsamında münhasıran hangi kurum tarafından yürütülür?", o: ["A) BOTAŞ", "B) TPAO", "C) TEİAŞ", "D) EPDK"], a: 2, r: "Elektrik iletim faaliyeti Türkiye'de yasa gereği münhasıran TEİAŞ tarafından yürütülür." },
+                { q: "8. Elektrik dağıtım şirketlerinin dikey bütünleşmesini önlemek amacıyla getirilen ortaklık yasağı kuralı hangisidir?", o: ["A) Dağıtım şirketleri üretim tesislerine hibe desteği sağlayamaz.", "B) Piyasa faaliyeti gösteren tüzel kişiler bir dağıtım şirketine ve dağıtım şirketi piyasa faaliyeti gösteren tüzel kişilere doğrudan ortak olamaz.", "C) Dağıtım şirketleri yabancı ortak alamaz.", "D) Toptan satış şirketleri ile ortaklık serbesttir."], a: 1, r: "Piyasa faaliyeti gösteren tüzel kişiler dağıtım şirketlerine doğrudan ortak olamazlar." },
+                { q: "9. Elektrik piyasasında dağıtım şirketleri hariç diğer faaliyetlerin denetimi Kurum (EPDK) tarafından yapılırken; elektrik dağıtım şirketlerinin denetimi kim tarafından yerine getirilir?", o: ["A) Rekabet Kurumu", "B) İçişleri Bakanlığı", "C) Enerji ve Tabii Kaynaklar Bakanlığı", "D) Hazine Müsteşarlığı"], a: 2, r: "Elektrik dağıtım şirketlerinin denetim yetkisi kanunen Bakanlığa (Enerji Bakanlığı) verilmiştir." },
+                { q: "10. Aşağıdakilerden hangisi Kurulca (EPDK) düzenlenen resmi elektrik piyasası tarife türlerinden biri değildir?", o: ["A) İletim ve Dağıtım tarifeleri", "B) Son kaynak tedarik tarifesi", "C) Serbest tüketici ikili anlaşma tarifesi", "D) Perakende satış tarifeleri"], a: 2, r: "Serbest tüketicilerle yapılan ikili anlaşma fiyatları serbestçe belirlenir, Kurul onayına tabi bir tarife türü değildir." },
+                { q: "11. Doğal Gaz Piyasası Kanunu kapsamında yürütülen lisansa tabi piyasa faaliyetleri arasında hangisi yer almaz?", o: ["A) İletim ve Dağıtım", "B) Rafinaj ve Madeni Yağ Üretimi", "C) Toptan ve Perakende Satış", "D) Depolama ve İthalat"], a: 1, r: "Rafinaj ve madeni yağ üretimi doğal gaz piyasasının değil petrol piyasasının faaliyet alanıdır." },
+                { q: "12. Mevcut, planlanan ve yapımı devam etmekte olan ulusal doğal gaz iletim şebekesi yasa gereği kime ait olur?", o: ["A) TEİAŞ", "B) TPAO", "C) BOTAŞ", "D) EPDK"], a: 2, r: "Mevcut, planlanan ve yapımı süren ulusal iletim şebekesi münhasıran BOTAŞ'a aittir." },
+                { q: "13. Doğal gaz piyasasında doğal gaz alım satımı yapan taraflar arasında Kurul onayı olmaksızın serbestçe belirlenen tarife hangisidir?", o: ["A) Bağlantı tarifesi", "B) Toptan satış tarifesi", "C) İletim bedeli tarifesi", "D) Perakende satış tarifesi"], a: 1, r: "Toptan satış tarifesi Kurul onayı olmaksızın taraflarca serbestçe müzakere edilebilir." },
+                { q: "14. Bir abonenin dağıtım şirketinin yazılı onayı olmaksızın iç tesisatta projesiz tadilat yaparak doğal gaz kullanması durumunda ne işlem yapılır?", o: ["A) Kaçak doğal gaz kullanımı işlemi", "B) Usulsüz doğal gaz kullanım işlemi yapılır ve gaz kesilir", "C) Herhangi bir ceza uygulanmaz", "D) Doğrudan hapis cezası istemiyle dava açılır"], a: 1, r: "İç tesisatta onaysız tadilat yapılması yasal olarak usulsüz doğal gaz kullanımı teşkil eder." },
+                { q: "15. Petrol Piyasası Kanunu kapsamında rafinaj, işleme, madeni yağ üretimi, depolama ve akaryakıt dağıtımı gibi faaliyetlerin yapılması için ne zorunludur?", o: ["A) Belediye ruhsatı", "B) EPDK'dan lisans alınması", "C) Ticaret Bakanlığı tescili", "D) Esnaf odası kaydı"], a: 1, r: "Petrol piyasasında lisans alınması zorunludur." },
+                { q: "16. Akaryakıt dağıtıcı lisansı sahiplerinin kendi işlettiği istasyonlar aracılığı ile yaptığı satış, toplam yurt içi pazar payının yüzde kaçından fazla olamaz?", o: ["A) Yüzde 15", "B) Yüzde 45", "C) Yüzde 50", "D) Yüzde 5"], a: 0, r: "Dağıtıcıların kendi işlettiği istasyonlardaki satış hacmi kendi pazar paylarının %15'ini aşamaz." },
+                { q: "17. Şehir içi yollarda aynı yönde olmak üzere akaryakıt ve LPG istasyonları arasındaki asgari mesafe kaç kilometredir?", o: ["A) 10 kilometre", "B) 5 kilometre", "C) 1 kilometre", "D) 500 metre"], a: 2, r: "İstasyonlar arası yasal sınır şehir içi yollarda en az 1 kilometredir." },
+                { q: "18. Petrol piyasasında rekabeti engelleyici veya bozucu eylemlerin tespiti halinde Kurum (EPDK) her seferinde en fazla kaç ayı aşmamak üzere taban/tavan fiyat koyabilir?", o: ["A) 1 ay", "B) 2 ay", "C) 6 ay", "D) 1 yıl"], a: 1, r: "Piyasa düzeni bozulduğunda EPDK'nın tavan/taban fiyat belirleme yetkisi her seferinde en fazla 2 aydır." },
+                { q: "19. Aşağıdakilerden hangisi LPG Piyasası Kanunu kapsamında yürütülen lisansa tabi ana faaliyetlerden biri değildir?", o: ["A) Dağıtım ve Otogaz bayiliği", "B) LPG taşıma ve depolama", "C) LPG tüpünün imalatı, dolumu ve bakımı", "D) Elektrikli araç şarj istasyonu kurma"], a: 3, r: "Şarj istasyonları elektrik piyasası konusudur, LPG piyasası faaliyet listesinde yoktur." },
+                { q: "20. LPG otogaz bayilerinin istasyon sınırları içerisinde yapması kanunen kesinlikle yasak olan eylem hangisidir?", o: ["A) Araçlara otogaz ikmali yapmak", "B) Sorumlu müdür çalıştırmak", "C) LPG tüpü dolumu ve satışı yapmak", "D) Dağıtıcısının amblemini asmak"], a: 2, r: "Otogaz istasyonlarında güvenlik gerekçesiyle tüp dolumu yapılması ve satılması kesinlikle yasaktır." }
+            ]
+        },
+        2: {
+            title: "Deneme Sınavı 2: Mevzuat ve Pazar Payı Sınırları Odaklı Set",
+            questions: [
+                { q: "1. Rezervleri tüketildikçe azalmayan, kendini yenileyebilen ve akım değişken olan güneş, rüzgar ve su hangi gruptadır?", o: ["A) Yenilenemez Kaynaklar", "B) Yenilenebilir Enerji Kaynakları", "C) Fosil Yakıtlar", "D) Konvansiyonel Enerji"], a: 1, r: "Rezervleri tükenmeyen ve sürekli kendini yenileyen kaynaklar yenilenebilir enerjidir." },
+                { q: "2. Anayasa Madde 123 uyarınca kamu tüzel kişiliğinin kurulma usulü hakkında hangisi doğrudur?", o: ["A) Sadece yönetmelikle kurulabilir", "B) Kanunla veya Cumhurbaşkanlığı kararnamesiyle kurulur", "C) Şirketlerin genel kurul kararıyla kurulur", "D) Yargıtay kararıyla kurulur"], a: 1, r: "Anayasa 123 uyarınca Kamu tüzel kişiliği, kanunla veya Cumhurbaşkanlığı kararnamesiyle kurulur." },
+                { q: "3. Enerji hukukunda EPDK'nın kurul ve daire kararlarının iptali davaları hangi hukuk disiplininin konusunu oluşturur?", o: ["A) Özel Borçlar Hukuku", "B) İdare Hukuku", "C) Ceza Hukuku", "D) İcra İflas Hukuku"], a: 1, r: "EPDK düzenleyici işlemleri ve yaptırımları idari işlem niteliğinde olduğundan İdare Hukuku alanına girer." },
+                { q: "4. Aşağıdakilerden hangisi EPDK'nın yaptırım uygulama yetkisi çerçevesinde piyasa aktörlerine uygulayabileceği cezalardan biridir?", o: ["A) Ağır hapis cezası", "B) İdari para cezası ve lisans iptali", "C) Şirket mallarına el koyarak müsadere etmek", "D) Sürgün cezası"], a: 1, r: "EPDK'nın idari para cezası, lisans iptali ve faaliyetten men gibi yaptırım yetkileri bulunur." },
+                { q: "5. Elektrik piyasasında yürütülen faaliyetler düşünüldüğünde, üretilen veya ithal edilen elektriğin perakende veya toptan satılma süreci hangi faaliyettir?", o: ["A) İletim faaliyeti", "B) Dağıtım faaliyeti", "C) Toptan ve Perakende satış faaliyeti", "D) Mikrokojenerasyon faaliyeti"], a: 2, r: "Elektrik enerjisinin ticareti toptan ve perakende satış faaliyeti lisansına tabidir." },
+                { q: "6. Elektrik Piyasası Kanunu'na göre acil durumlarda devreye giren ve şebekeyle bağlantı kurmayan 'İmdat grupları'nın yasal durumu nedir?", o: ["A) Tam lisans alma zorunluluğu vardır", "B) Lisans alma ve şirket kurma yükümlülüğünden muaftırlar", "C) İşletilmesi kanunen suçtur", "D) Sadece kamu eliyle kurulabilir"], a: 1, r: "Sistemle bağlantı kurmayan imdat grupları lisanslama ve şirket kurma zorunluluğundan muaf tutulmuştur." },
+                { q: "7. TEİAŞ iletim faaliyeti yürütürken verimlilik artışı sağlayacak nitelikteki 'piyasa dışı bir faaliyeti' kimin izniyle yürütebilir?", o: ["A) Cumhurbaşkanlığı", "B) Kurumun (EPDK) izniyle", "C) Rekabet Kurulu", "D) Ticaret Bakanlığı"], a: 1, r: "İletim dışı verimlilik artırıcı yan faaliyetlerin yürütülmesi EPDK iznine tabidir." },
+                { q: "8. Elektrik dağıtım şirketi, lisansında belirlenen bölgede aşağıdakilerden hangisinin yerine getirilmesinden asli olarak sorumludur?", o: ["A) Yüksek gerilim hatlarının çekilmesi", "B) Sayaçların okunması, bakımı ve işletilmesi hizmetleri", "C) Elektrik enerjisinin ithal edilmesi", "D) Fiyatların serbestçe tavan olarak belirlenmesi"], a: 1, r: "Sayaçların okunması, bakımı ve işletilmesi doğrudan dağıtım şirketinin yasal ödevidir." },
+                { q: "9. Elektrik dağıtım şirketlerinin Bakanlıkça yapılan denetim raporlarının sonuçlarına göre gerekli yaptırım ve işlemleri karara bağlayan merci kimdir?", o: ["A) Enerji Bakanı", "B) Kurul (EPDK Kurul Kararı)", "C) Danıştay", "D) TBMM"], a: 1, r: "Denetimi Bakanlık yapsa da ceza ve yaptırım kararlarını verme yetkisi EPDK Kurulundadır." },
+                { q: "10. Herhangi bir tedarikçiden elektrik almayan serbest tüketicilere son kaynak tedarikçisi sıfatıyla elektrik sağlama yükümlülüğü kime aittir?", o: ["A) TEİAŞ", "B) Görevli Tedarik Şirketi", "C) Lisanssız Üretici", "D) Dağıtım Şirketi"], a: 1, r: "Son kaynak tedarik görevi mevzuata göre ilgili dağıtım bölgesindeki görevli tedarik şirketine verilmiştir." },
+                { q: "11. Üretime mahsus toplama hatları ve dağıtım şebekeleri haricindeki gaz boru hattı şebekesiyle gerçekleştirilen doğal gaz nakil faaliyeti hangisidir?", o: ["A) Doğal gaz dağıtımı", "B) Doğal gaz iletimi", "C) Doğal gaz depolanması", "D) Doğal gaz toptan satışı"], a: 1, r: "Ana boru hatlarıyla yüksek basınçlı gaz taşınması iletim faaliyeti tanımına girer." },
+                { q: "12. Doğal gaz iletim şirketlerinin yasal olarak faaliyete geçebilmeleri için hangi merciiden lisans almaları zorunludur?", o: ["A) BOTAŞ Yönetim Kurulu", "B) Kuruldan (EPDK)", "C) Sanayi Odası", "D) Ticaret Bakanlığı"], a: 1, r: "Doğal gaz iletim şirketlerinin faaliyeti için EPDK'dan lisans alınması şarttır." },
+                { q: "13. Doğal gaz piyasasında abonelere uygulanacak sabit bağlantı tarifeleri kimin onayına tabidir?", o: ["A) Dağıtım şirketinin kendi kararına", "B) Kurul tarafından onaylanır", "C) Belediye meclisine", "D) Rekabet Kuruluna"], a: 1, r: "Abonelerin bağlantı tarifeleri EPDK Kurulu tarafından onaylanmak zorundadır." },
+                { q: "14. Bir tüketicinin kendi adına sözleşme yapmadan, daha önce aynı adresteki müşteri adına doğal gaz kullanması durumunda ne işlem yapılır?", o: ["A) Kaçak doğal gaz kullanımı işlemi", "B) Usulsüz doğal gaz kullanım işlemi yapılarak gazı kesilir", "C) Sözleşmesiz serbest tüketim hakkı", "D) Borç transfer işlemi"], a: 1, r: "Kendi adına sözleşme açtırmadan başkasının aboneliğinden gaz tüketmek net bir usulsüzlüktür." },
+                { q: "15. Aşağıdakilerden hangisi Petrol Piyasası Kanununa göre lisans alınması zorunlu olan faaliyetlerden biri değildir?", o: ["A) Rafinaj ve İşleme", "B) Madeni yağ üretimi ve depolama", "C) Nihai tüketicinin istasyondan kendi aracına yakıt alması", "D) Akaryakıt dağıtımı ve bayilik"], a: 2, r: "Tüketicilerin yakıt satın alması bir piyasa ticareti olmadığından lisansa tabi değildir." },
+                { q: "16. Akaryakıt dağıtıcılarının yurt içi toplam pazar payı, tekel oluşmasını engellemek amacıyla toplam yurt içi pazarın yüzde kaçını geçemez?", o: ["A) Yüzde 15", "B) Yüzde 30", "C) Yüzde 45", "D) Yüzde 75"], a: 2, r: "Dağıtıcı firmaların yurt içi toplam pazar payı tavan sınırı kanunen yüzde 45'tir." },
+                { q: "17. Şehirler arası yollarda aynı yönde olmak üzere akaryakıt ve LPG istasyonları arasındaki asgari mesafe kaç kilometredir?", o: ["A) 1 kilometre", "B) 5 kilometre", "C) 10 kilometre", "D) 20 kilometre"], a: 2, r: "Mevzuata göre şehirler arası yollarda istasyonlar arası asgari mesafe aynı yönde 10 km olmalıdır." },
+                { q: "18. Rafinerici ve dağıtıcı lisansı kapsamında yapılan piyasa faaliyetlerine ilişkin fiyatlar neye göre hazırlanan tavan fiyatlar olarak Kuruma bildirilir?", o: ["A) Şirketlerin maliyet endekslerine göre", "B) En yakın erişilebilir dünya serbest piyasa oluşumu dikkate alınarak", "C) Merkez Bankası enflasyon oranlarına göre", "D) Kurulun maktu talimatına göre"], a: 1, r: "Petrol fiyat listeleri dünya serbest piyasa oluşumları dikkate alınarak hazırlanır ve bildirilir." },
+                { q: "19. LPG alım satımında fiyatların oluşumundaki temel kanuni kıstas aşağıdakilerden hangisidir?", o: ["A) EPDK'nın her gün yayınladığı maktu liste", "B) Erişilebilir dünya serbest piyasa koşulları", "C) Dağıtıcıların tek taraflı belirlediği maktu oran", "D) Sorumlu müdürlerin ortak kararı"], a: 1, r: "LPG fiyatları da dünya serbest piyasa koşullarına göre serbestçe şekillenir." },
+                { q: "20. LPG dolum tesislerinde ve otogaz istasyonlarında yasal olarak istihdam edilmesi zorunlu olan sorumlu müdürün nitelikleri ne ile belirlenir?", o: ["A) Şirket iç yönetmeliğiyle", "B) Kurum (EPDK) tarafından çıkarılacak yönetmelikle", "C) Çalışma Bakanlığı tebliğiyle", "D) Ticaret Kanunu hükümleriyle"], a: 1, r: "Sorumlu müdürlerin yetki, sorumluluk ve tüm nitelikleri EPDK yönetmeliğiyle belirlenir." }
+            ]
+        },
+        3: {
+            title: "Deneme Sınavı 3: Hukuki İlişkiler ve Sözleşmeler Odaklı Set",
+            questions: [
+                { q: "1. Doğada fosil olarak bulunan, zamanla tükenecek olan ve çevreye alternatiflerine göre zararlı kimyasallar yayan kömür ve petrol hangi gruptadır?", o: ["A) Yenilenebilir Enerji", "B) Yenilenemez Enerji Kaynakları", "C) Akım Değişken Enerji", "D) Temiz Enerji"], a: 1, r: "Kömür ve petrol rezervleri sınırlı olan klasik yenilenemez (fosil) kaynaklardır." },
+                { q: "2. Anayasa'nın 167. maddesine göre Devletin para, kredi, sermaye, mal ve hizmet piyasalarında almakla yükümlü olduğu tedbir nedir?", o: ["A) Fiyatları tamamen sabitlemek", "B) Sağlıklı ve düzenli işlemelerini sağlayıcı ve geliştirici tedbirler almak", "C) Tüm özel şirketleri kamulaştırmak", "D) Dış ticareti tamamen durdurmak"], a: 1, r: "Devlet, piyasaların sağlıklı ve düzenli işlemesini sağlayıcı tedbirleri almakla Anayasal olarak ödevlidir." },
+                { q: "3. Enerji hukukunun elektrik tedarik sözleşmeleri ve abonelik sözleşmeleri gibi özel borç ilişkilerini barındıran yönü hangi alanla ilişkilidir?", o: ["A) Ceza Hukuku", "B) Borçlar Hukuku", "C) Devletler Umumi Hukuku", "D) Vergi Hukuku"], a: 1, r: "Abonelik ve ikili tedarik sözleşmeleri Borçlar Hukuku prensiplerine tabidir." },
+                { q: "4. Aşağıdakilerden hangisi EPDK'nın piyasayı izleme ve denetleme yetkisi kapsamında şirketlerden talep edebileceği standartlardır?", o: ["A) Şirket amblemlerinin tasarım şablonu", "B) Mali raporlama standartları ve performans ölçütleri", "C) Çalışanların sendikal üyelik formları", "D) Şirket araçlarının marka listesi"], a: 1, r: "EPDK denetim ve mali izleme amacıyla şirketler için mali raporlama ve performans standartları koyar." },
+                { q: "5. Elektrik piyasasında lisans almak koşuluyla yürütülebilecek faaliyetlerin listesinde yer alan, enerjinin tüketicilere ulaştırıldığı trafo ve hatların işletilmesi hangi faaliyettir?", o: ["A) İletim faaliyeti", "B) Dağıtım faaliyeti", "C) Üretim faaliyeti", "D) İthalat faaliyeti"], a: 1, r: "Elektriğin bölgesel hatlar üzerinden tüketicilere ulaştırılması dağıtım faaliyetidir." },
+                { q: "6. Belediyelerin katı atık tesisleri ile arıtma tesisi çamurlarının bertarafında kullanılmak üzere kurulan elektrik üretim tesislerinin muafiyeti nedir?", o: ["A) Vergiden muaftırlar", "B) Şirket kurma ve lisans alma yükümlülüğünden muaftırlar", "C) Denetimden muaftırlar", "D) Kamulaştırmadan muaftırlar"], a: 1, r: "Belediyelerin atık bertaraf amaçlı elektrik üretim tesisleri yasal olarak lisans yükümlülüğünden muaftır." },
+                { q: "7. TEİAŞ'ın iştigal yasağının temel istisnası, iletim sistemi teknik ve teknik olmayan kayıplarını karşılamak amacıyla ne yapabilmesidir?", o: ["A) Kamulaştırma yapabilmesi", "B) Elektrik enerjisi veya kapasitesi satın alması veya kiralaması", "C) Dağıtım tarifelerini re'sen belirlemesi", "D) Akaryakıt ithal etmesi"], a: 1, r: "TEİAŞ sistem kayıplarını telafi etmek için enerji veya kapasite satın alabilir/kiralayabilir; bu yasak kapsamında değildir." },
+                { q: "8. Elektrik dağıtım lisansı alan şirketler ile ilgili 'Lisansa derç edilen süre' ne ile aynı olmak zorundadır?", o: ["A) Şirketin ticaret sicil süresiyle", "B) Tesislerin işletme hakkı süresiyle", "C) EPDK başkanının görev süresiyle", "D) Anayasa mahkemesi üyelerinin süresiyle"], a: 1, r: "Lisans süresi ile işletme hakkı süresi aynıdır; biri bittiğinde diğeri de sona erer." },
+                { q: "9. Dağıtım şirketleri hariç elektrik piyasası faaliyetleri ile lisanssız faaliyet gösteren kişilerin denetimi kim tarafından yürütülür?", o: ["A) Enerji Bakanlığı", "B) Kurum (EPDK)", "C) Sayıştay", "D) Rekabet Kurumu"], a: 1, r: "Dağıtım dışındaki elektrik faaliyetlerinin denetim yetkesi doğrudan EPDK'ya (Kurum) aittir." },
+                { q: "10. Görevli tedarik şirketinin, serbest tüketici olmayan tüketicilere elektrik satışı yaparken uygulayacağı fiyat hangisidir?", o: ["A) Serbestçe müzakere edilen fiyat", "B) Kurul tarafından onaylanan perakende satış tarifeleri", "C) İthalat borsa tavan fiyatı", "D) Dağıtım şirketinin belirlediği maktu fiyat"], a: 1, r: "Serbest olmayan tüketicilere satışlar EPDK onaylı perakende satış tarifeleri üzerinden yapılır." },
+                { q: "11. Doğal gaz piyasasında yürütülebilecek faaliyetlerden hangisi sıvılaştırılmış doğal gazın (LNG) tesislerde veya yeraltında saklanması işlemidir?", o: ["A) Doğal gaz iletimi", "B) Doğal gaz depolama", "C) Doğal gaz dağıtımı", "D) Doğal gaz rafinajı"], a: 1, r: "Doğal gazın veya LNG'nin stoklanması ve saklanması yasal olarak depolama faaliyetidir." },
+                { q: "12. Doğal gaz iletim şirketlerince inşa edilecek iletim amaçlı yeni boru hatlarının mülkiyet ve işletme kuralı nasıldır?", o: ["A) Re'sen BOTAŞ'a devredilir", "B) Mülkiyeti kendilerine ait olmak üzere yatırım yapan iletim şirketlerince işletilir", "C) Tamamı yerel belediyelerin mülkiyetine geçer", "D) İşletmesi Rekabet Kuruluna verilir"], a: 1, r: "Yeni hatlar, mülkiyeti yatırımı yapan şirkete ait kalacak şekilde kendilerince işletilir." },
+                { q: "13. Eşit taraflar arasında ayrım gözetmeksizin uygulanacak olan doğal gaz iletim bedeli ve sevkiyat kontrol tarifeleri kim tarafından belirlenir?", o: ["A) Şirketlerin kendilerince", "B) Kurulca (EPDK)", "C) Ticaret Bakanlığınca", "D) BOTAŞ tarafından tek taraflı"], a: 1, r: "İletim bedelleri ve sevkiyat kontrol bedelleri EPDK Kurulu tarafından re'sen belirlenir." },
+                { q: "14. Bir doğal gaz abonesinin dağıtım şirketinin yazılı onayı olmaksızın başka bir bağımsız bölüme sayaç üzerinden bağlantı yapması hangi fiile girer?", o: ["A) Kaçak doğal gaz kullanımı", "B) Usulsüz doğal gaz kullanımı", "C) Serbest tüketim hakkı", "D) Mülkiyet devri"], a: 1, r: "Yazılı onay olmadan yan daireye/bölüme sayaçtan hat çekmek usulsüz gaz kullanımıdır." },
+                { q: "15. Petrol Piyasası Kanununa göre ihrakiye, akaryakıt dağıtımı, taşıması ve bayilik faaliyetleri için ne alınması zorunludur?", o: ["A) Ticaret odası belgesi", "B) Lisans", "C) Yatırım teşvik belgesi", "D) Muafiyet beratı"], a: 1, r: "Petrol piyasasındaki bu ticari faaliyetlerin tamamı için lisans alınması zorunludur." },
+                { q: "16. Dağıtıcı lisansı sahipleri, bayilerinde kaçak akaryakıt satışının yapılmasını önlemek amacıyla ne kurmak ve uygulamakla yükümlüdür?", o: ["A) Fiziki tel örgü sistemi", "B) Teknolojik yöntemleri de içeren bir denetim sistemi", "C) Fiyat sabitleme mekanizması", "D) Özel güvenlik ordusu"], a: 1, r: "Dağıtıcılar bayilerinde kaçak yakıtı engellemek için teknolojik denetim sistemi kurmak zorundadır." },
+                { q: "17. İstasyonlar arası mesafe kurallarını düzenleyen yönetmeliğin Petrol Piyasası Kanunundaki yasal yürürlük tarihi hangisidir?", o: ["A) 1 Ocak 2000", "B) 1 Ocak 2005", "C) 1 Ocak 2010", "D) 29 Ekim 2023"], a: 1, r: "Mesafe tahdidini getiren yasal yönetmeliğin yürürlük tarihi kanunda 1.1.2005 olarak belirtilmiştir." },
+                { q: "18. Petrol alım satımında fiyatların oluşumuna yön veren en temel yasal ilke aşağıdakilerden hangisidir?", o: ["A) Fiyatların Bakanlıkça maktu belirlenmesi", "B) En yakın erişilebilir dünya serbest piyasa koşullarına göre oluşması", "C) Fiyatların her ay sabit kalması mecburiyeti", "D) Fiyatların yerel belediye meclislerince onaylanması"], a: 1, r: "Petrol piyasasında fiyatlar dünya serbest piyasa koşullarına göre serbestçe oluşur." },
+                { q: "19. LPG piyasasında faaliyet gösteren otogaz bayileri, dağıtıcılar ile yapacakları hangi sözleşmeye göre faaliyetlerini yürütürler?", o: ["A) Acentelik sözleşmesi", "B) Tek elden satış sözleşmesi", "C) Kira sözleşmesi", "D) Komisyonculuk sözleşmesi"], a: 1, r: "Otogaz bayileri yasal olarak dağıtım şirketleriyle tek elden satış sözleşmesi imzalamak zorundadır." },
+                { q: "20. LPG dolum tesislerinde ve otogaz istasyonlarında sorumlu müdür bulundurulması yükümlülüğü hakkında hangisi doğrudur?", o: ["A) İsteğe bağlıdır", "B) Bulundurulması zorunludur", "C) Sadece dolum tesislerinde zorunludur", "D) Yalnızca yabancı şirketlerde zorunludur"], a: 1, r: "Mevzuata göre hem dolum tesislerinde hem de otogaz istasyonlarında sorumlu müdür bulundurulması mecburidir." }
+            ]
+        },
+        4: {
+            title: "Deneme Sınavı 4: Tüketici Hakları ve Doğal Gaz Piyasası Ağırlıklı Set",
+            questions: [
+                { q: "1. Tüketildikçe rezervleri azalmayan, kendini yenileyebilen akım değişken rüzgar ve hidrojen enerjisi hangi gruba girer?", o: ["A) Fosil Enerji Kaynakları", "B) Yenilenebilir Enerji Kaynakları", "C) Yenilenemez Enerji Kaynakları", "D) Statik Kaynaklar"], a: 1, r: "Rüzgar ve hidrojen enerjisi tükenmeyen alternatif yenilenebilir kaynaklardır." },
+                { q: "2. Anayasa'nın 123. maddesindeki 'İdare, kuruluş ve görevleriyle bir bütündür ve kanunla düzenlenir' ilkesi aşağıdakilerden hangisini ifade eder?", o: ["A) İdarenin gizliliği esastır", "B) İdarenin bütünlüğü ilkesini", "C) İdarenin yargı denetimi dışı olduğunu", "D) İdari işlemlerin geriye yürütülebileceğini"], a: 1, r: "Anayasa 123. maddenin başlığı doğrudan 'İdarenin bütünlüğü ve kamu tüzelkişiliği'dir." },
+                { q: "3. Enerji projelerinin çevresel etkilerini ve çevresel düzenlemelere uygunluğunun denetimini kapsayan ve enerji hukukunun ilişki kurduğu dal hangisidir?", o: ["A) Vergi Hukuku", "B) Çevre Hukuku", "C) Borçlar Hukuku", "D) Ticaret Hukuku"], a: 1, r: "Projelerin çevresel etkileri ve ÇED süreçleri Çevre Hukuku ile olan ilişkiyi gösterir." },
+                { q: "4. EPDK'nın yetkileri arasında yer alan lisanslama işlemleri hakkında aşağıda verilen ifadelerden hangisi doğrudur?", o: ["A) Lisanslar süresiz ve devredilemez olarak verilir", "B) Piyasada faaliyet göstermek isteyen tüzel kişilere yasal şartları sağladığında lisans verilir", "C) Lisans verme yetkisi yerel belediyelerdedir", "D) Lisanssız hiçbir enerji üretimi yapılamaz"], a: 1, r: "Piyasada ticari faaliyet göstermek isteyen şirketlere lisanslama yapmak EPDK'nın temel görevidir." },
+                { q: "5. Elektrik Piyasasında yürütülebilecek lisansa tabi faaliyetlerin tamamı hangi seçenekte doğru olarak listelenmiştir?", o: ["A) Sadece Üretim ve İletim", "B) Üretim, İletim, Dağıtım, Toptan/Perakende Satış, Piyasa İşletim, İthalat, İhracat, Toplayıcılık", "C) Sadece Dağıtım ve Perakende Satış", "D) Üretim, Rafinaj, Depolama, İhrakiye"], a: 1, r: "Elektrik piyasasındaki tüm lisansa tabi faaliyetler 6446 sayılı kanunda eksiksiz listelenmiştir." },
+                { q: "6. Elektrik Piyasası Kanunu uyarınca mikrokojenerasyon tesisleri için sağlanan yasal muafiyet aşağıdakilerden hangisidir?", o: ["A) Vergi ödemekten muaftırlar", "B) Lisans alma ve şirket kurma yükümlülüğünden muaftırlar", "C) Denetim prosedürlerinden muaftırlar", "D) Sistem kullanım bedelinden muaftırlar"], a: 1, r: "Mikrokojenerasyon tesisleri lisans alma ve şirket kurma zorunluluğundan muaf tutulmuştur." },
+                { q: "7. Türkiye Elektrik İletim Anonim Şirketi (TEİAŞ) ile ilgili kanunda yer alan temel yasaklama hükmü aşağıdakilerden hangisidir?", o: ["A) Yabancı işçi çalıştıramaz", "B) Kanunla belirlenen faaliyetler dışında bir faaliyetle iştigal edemez", "C) Elektrik enerjisi satın alamaz", "D) Borçlanma yapamaz"], a: 1, r: "TEİAŞ, iletim tekelini korumak amacıyla kendi kanuni görevleri dışında hiçbir piyasa faaliyetiyle iştigal edemez." },
+                { q: "8. Elektrik dağıtım şirketlerinin içi boşalmış hale gelmesi riski hangi hukuki durumun gerçekleşmesi sonucunda ortaya çıkacaktır?", o: ["A) Şirketlerin zarar etmesi durumunda", "B) İşletme hakkı süresi sona erdiğinde lisansın da sona erecek olması nedeniyle", "C) Vergilerin aşırı yükselmesi durumunda", "D) Sayaçların dijitalleşmesi durumunda"], a: 1, r: "İşletme hakkı bitince lisans da biteceğinden dağıtım şirketlerinin içi boşalmış hale gelecektir." },
+                { q: "9. Bakanlık ve Kurum (EPDK) denetim yükümlülükleri ile ilgili olarak inceleme ve raporlama yaptırmak üzere kimlerden hizmet satın alabilir?", o: ["A) Yabancı polis teşkilatlarından", "B) İlgili mevzuatına uygun bir şekilde özel şirketlerden", "C) Gönüllü tüketici derneklerinden", "D) Belediye zabıta ekiplerinden"], a: 1, r: "Bakanlık ve Kurum, bağlayıcı olmamak kaydıyla denetim/inceleme işleri için özel şirketlerden hizmet alabilir." },
+                { q: "10. Görevli tedarik şirketinin son kaynak tedarikçisi sıfatıyla faaliyet göstereceği bölge neresidir ve nereye dercedilir?", o: ["A) Tüm Türkiye'dir ve Resmi Gazetede yayınlanır", "B) İlgili dağıtım bölgesidir ve bu husus tedarik lisansına dercedilir", "C) Belediye mücavir alanıdır ve imar planına işlenir", "D) Serbest bölge sınırlarıdır"], a: 1, r: "Son kaynak tedarikçisinin faaliyet alanı ilgili dağıtım bölgesidir ve lisansına işlenir." },
+                { q: "11. Aşağıdakilerden hangisi Doğal Gaz Piyasası faaliyetleri arasında lisansa tabi olarak düzenlenen alanlardan biri değildir?", o: ["A) İletim ve Dağıtım", "B) Depolama ve Toptan Satış", "C) Ev içi mutfak ocağı imalatı", "D) İthalat ve İhracat"], a: 2, r: "Ocak imalatı sanayi üretimidir, doğal gaz piyasası lisansına tabi bir enerji faaliyeti değildir." },
+                { q: "12. Doğal gaz iletimi tanımı yapılırken aşağıdakilerden hangisi bu tanımın yasal olarak dışarısında (haricinde) tutulmuştur?", o: ["A) Yüksek basınçlı çelik boru hatları", "B) Üretime mahsus toplama hatları ve dağıtım şebekeleri", "C) Ulusal iletim şebekesi hatları", "D) BOTAŞ'a ait ana boru hatları"], a: 1, r: "Üretime mahsus toplama hatları ve yerel dağıtım şebekeleri iletim tanımının dışındadır." },
+                { q: "13. Doğal gaz piyasasında depolama şirketleri ile hizmet alan tüzel kişiler arasındaki depolama tarifesi nasıl belirlenir?", o: ["A) Kurul tarafından maktu belirlenir", "B) Ayrım yapılmaması ilkesi esas alınarak taraflarca serbestçe belirlenir", "C) BOTAŞ tarafından re'sen tayin edilir", "D) Sanayi bakanlığınca maktu ilan edilir"], a: 1, r: "Depolama tarifeleri ayrımcılık yapmama kaydıyla taraflar arasında serbestçe kararlaştırılır." },
+                { q: "14. Dağıtım şirketinin yazılı onayı olmaksızın doğal gaz kullanılması veya projesiz hat çekilmesi durumunda dağıtım şirketinin uygulayacağı yasal işlem hangisidir?", o: ["A) Kaçak işlemi ile savcılığa sevk", "B) Usulsüz doğal gaz kullanım işlemi yapılır ve gaz kesilir", "C) Tarifeyi iki katına çıkarma cezası", "D) Abone kaydını tamamen silme"], a: 1, r: "Yazılı onay olmaksızın gaz kullanılması net bir usulsüz doğal gaz kullanımı halidir." },
+                { q: "15. Aşağıdaki piyasa faaliyetlerinden hangisinin petrol piyasasında yapılması için EPDK'dan lisans alınması zorunludur?", o: ["A) Otomobil lastiği satışı", "B) Akaryakıt dağıtımı, taşıması ve bayilik faaliyetleri", "C) İstasyon içi market işletmeciliği", "D) Araç yıkama hizmeti sunulması"], a: 1, r: "Akaryakıt dağıtımı, nakliyesi ve bayilik (istasyon işletme) doğrudan lisansa tabidir." },
+                { q: "16. Akaryakıt dağıtıcı lisansı sahipleri bayi denetim sisteminin kurulmadığı veya mevzuata uygun olmadığı tespit edilen bayilerine ne yapamazlar?", o: ["A) İdari para cezası kesemezler", "B) Akaryakıt ikmali yapamazlar", "C) Sözleşmeyi feshedemezler", "D) Tabela asamazlar"], a: 1, r: "Teknolojik denetim sistemi aktif olmayan bayilere dağıtıcı firmalar akaryakıt sevkiyatı (ikmali) yapamazlar." },
+                { q: "17. Akaryakıt ve LPG istasyonları arasındaki mesafeleri düzenleyen kurallar hangi yasal metinle ve kim tarafından düzenlenir?", o: ["A) Karayolları Kanunu ile TBMM", "B) Kurul tarafından çıkarılacak yönetmelikle", "C) Belediye imar yönetmeliği ile Belediye", "D) Çevre Bakanlığı tebliğiyle"], a: 1, r: "İstasyon mesafeleri EPDK Kurulu tarafından çıkarılacak bir yönetmelikle düzenlenir." },
+                { q: "18. Petrol piyasasında yerli ham petrol için teslim yeri olan en yakın liman veya rafineride teşekkül eden hangi fiyat baz alınır?", o: ["A) Maktu Fiyat", "B) Piyasa Fiyatı", "C) Taban Fiyat", "D) Gümrük Fiyatı"], a: 1, r: "Yerli ham petrolde teslim noktasında oluşan 'Piyasa Fiyatı' yasal baz fiyat kabul edilir." },
+                { q: "19. Aşağıdakilerden hangisi LPG Piyasası Kanununa göre yürütülen temel piyasa faaliyetleri listesinde yer alır?", o: ["A) LPG dolum tesisleri işletme ve otogaz bayiliği", "B) Ham petrol kuyusu açma", "C) Doğal gaz sıvılaştırma (LNG) tesisi kurma", "D) Benzinli motor imalatı"], a: 0, r: "LPG dolumu, nakliyesi ve otogaz bayiliği temel LPG piyasası faaliyetlerindendir." },
+                { q: "20. LPG otogaz bayileri istasyonlarında hangi tür personeli istihdam etmek ve çalıştırmakla yasal olarak yükümlüdürler?", o: ["A) Yeminli Mali Müşavir", "B) Sorumlu Müdür", "C) İşyeri Hekimi", "D) Pazarlama Uzmanı"], a: 1, r: "Otogaz istasyonlarında sorumlu müdür çalıştırılması kanuni bir zorunluluktur." }
+            ]
+        },
+        5: {
+            title: "Deneme Sınavı 5: Petrol Piyasası ve Rekabet Kuralları Odaklı Set",
+            questions: [
+                { q: "1. Doğada fosil olarak bulunan, zamanla tükenecek olan alternatif kaynaklara göre doğaya zararlı kimyasallar yayan kaynakların genel tanımı hangisidir?", o: ["A) Yenilenebilir Enerji Kaynakları", "B) Yenilenemez Enerji Kaynakları", "C) Akışkan Enerji Kaynakları", "D) Sürdürülebilir Kaynaklar"], a: 1, r: "Zamanla tükenen ve çevreye emisyon yayan kaynaklar yenilenemez (fosil) kaynaklardır." },
+                { q: "2. Anayasa'nın 168. maddesine göre tabii servetler ve kaynaklar kimin hüküm ve tasarrufu altındadır?", o: ["A) Özel mülkiyet sahiplerinin", "B) Devletin", "C) Yerel belediyelerin", "D) Uluslararası konsorsiyumların"], a: 1, r: "Anayasa 168 uyarınca tabii servetler ve kaynaklar Devletin hüküm ve tasarrufu altındadır." },
+                { q: "3. Enerji hukukunun, sektördeki mali ve vergisel hak ve yükümlülükleri içermesi yönünden ilişkili olduğu hukuk disiplini hangisidir?", o: ["A) Ceza Hukuku", "B) Vergi Hukuku", "C) İcra İflas Hukuku", "D) Çevre Hukuku"], a: 1, r: "Sektördeki mali ve vergisel ödevler doğrudan Vergi Hukukunun alanına girer." },
+                { q: "4. Aşağıdakilerden hangisi EPDK'nın yetkileri arasında yer alan lisans iptali yaptırımının hukuki sonucudur?", o: ["A) Şirketin vergi borçlarının silinmesi", "B) Şirketin ilgili piyasadaki lisanslı faaliyetinin tamamen sona ermesi", "C) Şirket ortaklarının hapse atılması", "D) Şirketin unvanının re'sen değiştirilmesi"], a: 1, r: "Lisans iptali, bir şirketin o piyasada faaliyet gösterme yasal hakkını tamamen ortadan kaldırır." },
+                { q: "5. Elektrik piyasasında yürütülen faaliyetlerden hangisi, üretilen elektriğin tüketicilere ulaştırılması sürecindeki yerel şebeke hat işletimidir?", o: ["A) İletim faaliyeti", "B) Dağıtım faaliyeti", "C) Toptan satış faaliyeti", "D) İthalat faaliyeti"], a: 1, r: "Elektrik enerjisinin yerel şebekeden tüketicilere dağıtılması dağıtım faaliyetidir." },
+                { q: "6. Kurulu gücü azami kaç megavat olan yenilenebilir enerji kaynaklarına dayalı üretim tesisleri lisans alma ve şirket kurma yükümlülüğünden muaftır?", o: ["A) 1 megavat", "B) 5 megavat", "C) 10 megavat", "D) 50 megavat"], a: 0, r: "Yenilenebilir kaynaklı tesislerde lisanssız üretim sınırı kanunen azami 1 megavattır." },
+                { q: "7. TEİAŞ'ın iletim sistemi teknik kayıplarını karşılamak amacıyla yaptığı hangi işlem yasal iştigal yasağının istisnasıdır?", o: ["A) Arsa kamulaştırmak", "B) Elektrik enerjisi veya kapasitesi satın alması veya kiralaması", "C) Perakende abonelik sözleşmesi yapmak", "D) Yabancı şirket hissesi satın almak"], a: 1, r: "TEİAŞ şebeke kayıplarını karşılamak adına enerji satın alabilir veya kiralayabilir." },
+                { q: "8. Elektrik dağıtım şirketlerinin sahip olduğu dağıtım lisansı süresi hukuken ne ile aynı (eş) olmak zorundadır?", o: ["A) EPDK kurulunun görev süresiyle", "B) Tesislerin işletme hakkı süresiyle", "C) Şirket CEO'sunun sözleşmesiyle", "D) Dağıtım yapılan bölgenin nüfus endeksiyle"], a: 1, r: "Lisansa derç edilen süre ile tesislerin işletme hakkı süresi birebir aynıdır." },
+                { q: "9. Elektrik piyasasında elektrik dağıtım şirketlerinin inceleme ve denetimi münhasıran hangi makam tarafından gerçekleştirilir?", o: ["A) EPDK", "B) Bakanlık (Enerji Bakanlığı)", "C) Sayıştay", "D) Rekabet Kurulu"], a: 1, r: "Kanun, elektrik dağıtım şirketlerinin denetim yetkisini Enerji Bakanlığına vermiştir." },
+                { q: "10. Düzenlemeye tabi tarifeler kapsamında görevli tedarik şirketinin son kaynak tedarikçisi sıfatıyla sağlayacağı elektrik tarifeleri kim tarafından belirlenir?", o: ["A) Tedarik şirketinin kendisince", "B) Kurul (EPDK) tarafından", "C) Rekabet Kurulunca", "D) Tüketici derneklerince"], a: 1, r: "Son kaynak tedarik tarifeleri resmi olarak EPDK Kurulu tarafından belirlenir." },
+                { q: "11. Doğal Gaz Piyasası Kanununa göre şehir içi doğal gaz şebekesinin işletilmesi ve gazın nihai tüketicilere ulaştırılması faaliyeti hangisidir?", o: ["A) İletim faaliyeti", "B) Dağıtım faaliyeti", "C) Toptan satış faaliyeti", "D) Rafinaj faaliyeti"], a: 1, r: "Gazın yerel şebekeden tüketicilere sunulması dağıtım faaliyetidir." },
+                { q: "12. Doğal gaz iletim şebekesi kapsamında yer alan boru hatlarının mülkiyeti hakkında hangisi doğrudur?", o: ["A) Tamamı özel şirketlerin mülkiyetindedir", "B) Mevcut, planlanan ve yapımı devam eden ulusal iletim şebekesi BOTAŞ'a ait olur", "C) Belediyelerin ortak mülkiyetindedir", "D) EPDK'nın mülkiyetindedir"], a: 1, r: "Ulusal iletim şebekesinin mülkiyeti yasa gereği net olarak BOTAŞ'ındır." },
+                { q: "13. Dağıtım şirketinin uygulayacağı doğal gaz perakende satış fiyatı üst sınırını oluşturan mali kalemler arasında hangisi yoktur?", o: ["A) Birim doğal gaz alım fiyatı", "B) Sistem kullanım bedeli", "C) Vergi ve benzeri yükümlülükler", "D) Dağıtım şirketinin şahsi reklam harcamaları"], a: 3, r: "Şirketin şahsi reklam harcamaları yasal perakende satış fiyatı hesaplama unsurları arasında yer almaz." },
+                { q: "14. Doğal gaz iç tesisatında yetkili şirketten yazılı onay almadan tadilat/değişiklik yaparak gaz kullanan aboneye ne işlem yapılır?", o: ["A) Kaçak işlemi uygulanır", "B) Usulsüz doğal gaz kullanım işlemi yapılır ve gaz kesilir", "C) Teşvik ödülü verilir", "D) Herhangi bir kısıtlama uygulanmaz"], a: 1, r: "İç tesisatta onaysız projesiz tadilat yapılması usulsüz doğal gaz kullanımı demektir." },
+                { q: "15. Petrol piyasasında faaliyet gösteren tüzel kişilerin rafinaj, işleme, depolama veya bayilik yapabilmesi için hangi kurumdan lisans alması şarttır?", o: ["A) Ticaret Bakanlığı", "B) EPDK (Kurum)", "C) Sanayi Odası", "D) Karayolları Genel Müdürlüğü"], a: 1, r: "Petrol piyasası faaliyetlerinin tamamı EPDK'dan alınacak lisansa bağlıdır." },
+                { q: "16. Akaryakıt dağıtıcı tüzel kişilerin piyasada tekelleşmesini önlemek amacıyla getirilen yurt içi toplam pazar payı sınırı yüzde kaçtır?", o: ["A) Yüzde 15", "B) Yüzde 25", "C) Yüzde 45", "D) Yüzde 50"], a: 2, r: "Dağıtıcıların yurt içi toplam pazar payı tavanı kanunen yüzde 45 ile sınırlandırılmıştır." },
+                { q: "17. Akaryakıt ve LPG istasyonları arasındaki mesafelerin ölçülmesinde karayolları üzerinde esas alınan yasal doğrultu kuralı nasıldır?", o: ["A) Kuşuçuşu mesafe", "B) Aynı yönde olmak üzere", "C) Çapraz doğrultudaki mesafe", "D) Karşı şeritteki en yakın mesafe"], a: 1, r: "İstasyon mesafeleri ölçülürken karayolunda 'aynı yönde' olma esası yasal şarttır." },
+                { q: "18. Petrol alım satımında fiyatların oluşmasında hangi serbest piyasa koşulları yasal baz olarak kabul edilir?", o: ["A) Sadece yerel borsa endeksi", "B) En yakın erişilebilir dünya serbest piyasa koşulları", "C) Hükümetin belirlediği maktu oran", "D) Komşu ülkelerin tavan fiyatları"], a: 1, r: "Petrol fiyat oluşumunda uluslararası en yakın erişilebilir dünya serbest piyasası baz alınır." },
+                { q: "19. LPG otogaz bayileri yasal yükümlülükleri uyarınca istasyonlarında aşağıdakilerden hangisini satamaz ve dolduramazlar?", o: ["A) Araçlara otogaz ikmali yapmak", "B) LPG tüpü dolumu ve satışı yapmak", "C) Madeni yağ satışı yapmak", "D) Cam suyu satmak"], a: 1, r: "Otogaz istasyonlarında tüp dolumu ve satışı yapılması kesinlikle yasaktır." },
+                { q: "20. LPG dolum tesislerinde ve otogaz istasyonlarında bulundurulması zorunlu olan sorumlu müdürün yasal sorumlulukları ne ile belirlenir?", o: ["A) Şirket yönetim kurulu kararıyla", "B) Kurum tarafından çıkarılacak yönetmelikle", "C) İş kanunu maktu maddeleriyle", "D) Yerel belediye meclis kararıyla"], a: 1, r: "Sorumlu müdürün tüm yasal ödev ve yetkileri EPDK tarafından çıkarılacak yönetmelikle belirlenir." }
+            ]
+        },
+        6: {
+            title: "Deneme Sınavı 6: İleri Seviye Mevzuat ve Yaptırımlar Seti",
+            questions: [
+                { q: "1. Tüketildiğinde rezervleri azalan, yenilenemeyen ve doğada fosil olarak bulunan kaynaklar arasında sunumda açıkça sayılan enerji hangisidir?", o: ["A) Güneş enerjisi", "B) Rüzgar enerjisi", "C) Nükleer enerji", "D) Hidrojen enerjisi"], a: 2, r: "Kömür, petrol, gaz ve nükleer enerji sunumda yenilenmeyen kaynaklar arasında listelenmiştir." },
+                { q: "2. Anayasa'nın 168. maddesine göre tabii servetlerin gerçek ve tüzel kişiler eliyle aranması ve işletilmesi neyin açık iznine bağlıdır?", o: ["A) Cumhurbaşkanlığı Kararnamesinin", "B) Kanunun açık iznine bağlıdır", "C) Belediye Meclis Kararının", "D) EPDK Kurul Kararının"], a: 1, r: "Tabii kaynakların özel sektör eliyle aranması ve işletilmesi kanunun açık iznine tabidir." },
+                { q: "3. Enerji hukukunda idari yaptırımların Kabahatler Kanunu'na tabi olması sebebiyle temas kurduğu hukuk disiplini hangisidir?", o: ["A) Ticaret Hukuku", "B) Ceza - Kabahatler Hukuku", "C) Uluslararası Kamu Hukuku", "D) Medeni Hukuk"], a: 1, r: "İdari para cezaları ve kabahatler yaptırım hukuku yönüyle Ceza ve Kabahatler hukuku ile ilişkilidir." },
+                { q: "4. Aşağıdakilerden hangisi EPDK'nın genel görevleri arasında yer alan uyuşmazlık çözümü ve yaptırım yetkisine girmez?", o: ["A) İdari para cezası uygulamak", "B) Lisans iptali yapmak", "C) Şirket yöneticilerini hapse atmak", "D) Süreli faaliyetten men etmek"], a: 2, r: "Hapis cezası verme yetkisi bağımsız adli mahkemelerdedir, idari bir kurul olan EPDK hapis cezası veremez." },
+                { q: "5. Elektrik piyasasında herhangi bir coğrafi bölge sınırlaması olmaksızın serbest tüketicilere toptan veya perakende satış yapan aktör hangisidir?", o: ["A) İletim Şirketi (TEİAŞ)", "B) Tedarik Şirketleri", "C) Dağıtım Şirketleri", "D) Üretim Şirketleri"], a: 1, r: "Bölge sınırlaması olmaksızın serbest tüketicilere elektrik satışı yapan aktör tedarik şirketleridir." },
+                { q: "6. Lisans alma ve şirket kurma yüküml
